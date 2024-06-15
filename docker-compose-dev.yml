@@ -1,0 +1,14 @@
+services:
+  beancount-gs:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: beancount-gs
+    ports:
+      - "10000:80"
+    volumes:
+      - "./data/beancount:/data/beancount"
+      - "./data/beancount/icons:/app/public/icons"
+      - "./data/beancount/config:/app/config"
+      - "./data/beancount/bak:/app/bak"
+      - "./data/beancount/logs:/app/logs"
