@@ -1,0 +1,19 @@
+# git
+.git
+.gitattributes
+.gitignore
+
+# JetBrains
+.idea
+
+# VSCode
+.vscode
+
+# Common
+README.md
+CHANGELOG.md
+LICENSE
+docker-compose.yml
+docker-compose-dev.yml
+Dockerfile
+*.png
