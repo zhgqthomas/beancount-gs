@@ -7,3 +7,4 @@ beancount-gs
 gin.log
 config.json
 /data
+.env
