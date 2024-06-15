@@ -1,9 +1,8 @@
-# 构建 beancount
+# Build beancount
 FROM python:3.7.16-alpine as beancount_builder
-
-ARG BEANCOUNT_VERSION=2.3.6
-
 WORKDIR /build
+ENV PATH "/app/bin:$PATH"
+ARG BEANCOUNT_VERSION=2.3.6
 
 RUN apk add --no-cache gcc musl-dev python3-dev libffi-dev openssl-dev && \
     python3 -m venv /app && \
@@ -12,9 +11,8 @@ RUN apk add --no-cache gcc musl-dev python3-dev libffi-dev openssl-dev && \
     python3 -m pip install ./beancount-${BEANCOUNT_VERSION} && \
     find /app -name __pycache__ -exec rm -rf {} +
 
-# 构建 beancount-gs
+# Build beancount-gs
 FROM golang:1.17.3-alpine AS go_builder
-
 ENV GO111MODULE=on \
     GIN_MODE=release \
     CGO_ENABLED=0 \
@@ -23,11 +21,10 @@ ENV GO111MODULE=on \
 WORKDIR /build
 COPY . .
 COPY public/icons ./public/default_icons
+
 RUN go build .
 
-# 镜像
 FROM python:3.7.16-alpine
-
 COPY --from=beancount_builder /app /app
 
 WORKDIR /app
@@ -38,5 +35,6 @@ COPY --from=go_builder /build/public ./public
 COPY --from=go_builder /build/logs ./logs
 
 ENV PATH "/app/bin:$PATH"
-
 EXPOSE 80
+
+CMD ["sh", "-c", "cp -rn /app/public/default_icons/* /app/public/icons && ./beancount-gs -p 80"]
